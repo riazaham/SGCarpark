@@ -2,7 +2,11 @@
 <h1>SG Carpark</h1>
 <p><%= date %></p>
 <form action="/search" method="post">
-	<input type="text" placeholder="Search area, building, carpark etc." />
+	<input
+		type="text"
+		name="searchWord"
+		placeholder="Search area, building, carpark etc."
+	/>
 	<button type="submit">Search</button>
 </form>
 <%- include("partials/footer.ejs") -%>

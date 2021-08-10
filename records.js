@@ -1,10 +1,11 @@
 import https from "https";
 
 const getCarparkRateURL =
-	"https://data.gov.sg/api/action/datastore_search?resource_id=85207289-6ae7-4a56-9066-e6090a3684a5&limit=5";
+	"https://data.gov.sg/api/action/datastore_search?resource_id=85207289-6ae7-4a56-9066-e6090a3684a5&limit=1";
 
-export function getRecords(records, callback) {
-	https.get(getCarparkRateURL, (response) => {
+export function getRecords(records, searchWord, callback) {
+	const query = "&q=" + searchWord;
+	https.get(getCarparkRateURL + query, (response) => {
 		const chunks = [];
 
 		response.on("data", (chunk) => {

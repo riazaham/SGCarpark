@@ -8,8 +8,7 @@ app.set("view-engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-const getCarparkRateURL =
-	"https://data.gov.sg/api/action/datastore_search?resource_id=85207289-6ae7-4a56-9066-e6090a3684a5&limit=5";
+let searchWord = "";
 
 app.get("/", (req, res) => {
 	const date = getDate();
@@ -18,10 +17,13 @@ app.get("/", (req, res) => {
 
 app.get("/search", (req, res) => {
 	const records = [];
-	getRecords(records, () => res.render("search.ejs", { records: records }));
+	getRecords(records, searchWord, () =>
+		res.render("search.ejs", { records: records })
+	);
 });
 
 app.post("/search", (req, res) => {
+	searchWord = req.body.searchWord;
 	res.redirect("/search");
 });
 
