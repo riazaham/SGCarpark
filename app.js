@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
 
 app.get("/search", async (req, res) => {
 	const record = await getRecord(searchWord);
-	console.log(record);
+
 	res.render("search.ejs", { record: record });
 });
 

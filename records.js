@@ -6,9 +6,14 @@ const getCarparkRateURL =
 const getLatLongURL =
 	"https://developers.onemap.sg/commonapi/search?returnGeom=Y&getAddrDetails=N&pageNum=1";
 
+const getStaticMap =
+	"https://developers.onemap.sg/commonapi/staticmap/getStaticImage?layerchosen=default&zoom=17&height=512&width=512";
+
 const makeRequest = async (url, queries) => {
 	const res = await superagent.get(url).query(queries);
-	return JSON.parse(res.res.text);
+	if (res.type === "image/png")
+		return Buffer.from(res.body, "hex").toString("base64");
+	else return JSON.parse(res.res.text);
 };
 
 export async function getRecord(searchWord) {
@@ -26,14 +31,20 @@ export async function getRecord(searchWord) {
 	);
 	carparkLatLongData = carparkLatLongData.results[0];
 
+	const carparkStaticMapQuery =
+		"&lat=" +
+		carparkLatLongData.LATITUDE +
+		"&lng=" +
+		carparkLatLongData.LONGITUDE;
+	let carparkStaticMap = await makeRequest(getStaticMap, carparkStaticMapQuery);
+
 	const record = {
 		carpark: carparkRatesData.carpark,
 		weekdays_rate_1: carparkRatesData.weekdays_rate_1,
 		weekdays_rate_2: carparkRatesData.weekdays_rate_2,
 		saturday_rate: carparkRatesData.saturday_rate,
 		sunday_publicholiday_rate: carparkRatesData.sunday_publicholiday_rate,
-		lat: carparkLatLongData.LATITUDE,
-		long: carparkLatLongData.LONGITUDE,
+		staticMap: carparkStaticMap,
 	};
 
 	return record;
