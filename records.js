@@ -30,12 +30,20 @@ export async function getRecord(searchWord) {
 		carparkLatLongQuery
 	);
 	carparkLatLongData = carparkLatLongData.results[0];
+	const lat = carparkLatLongData.LATITUDE;
+	const lng = carparkLatLongData.LONGITUDE;
 
 	const carparkStaticMapQuery =
 		"&lat=" +
-		carparkLatLongData.LATITUDE +
+		lat +
 		"&lng=" +
-		carparkLatLongData.LONGITUDE;
+		lng +
+		"&points=[" +
+		lat +
+		"," +
+		lng +
+		',"255,0,0",' +
+		'""]';
 	let carparkStaticMap = await makeRequest(getStaticMap, carparkStaticMapQuery);
 
 	const record = {
