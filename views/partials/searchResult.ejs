@@ -1,0 +1,30 @@
+<div class="row">
+	<div class="col text-end">
+		<img id="mapid" src="data:image/png;base64, <%= record.staticMap %>" />
+	</div>
+	<div class="col">
+		<table class="table table-bordered">
+			<tbody>
+				<tr>
+					<td class="td-label">Carpark:</td>
+					<td class="td-value"><%= record.carpark %></td>
+				</tr>
+				<tr>
+					<td class="td-label" rowspan="2">Weekday rates:</td>
+					<td class="td-value"><%= record.weekdays_rate_1 %></td>
+				</tr>
+				<tr>
+					<td class="td-value"><%= record.weekdays_rate_2 %></td>
+				</tr>
+				<tr>
+					<td class="td-label">Saturday rates:</td>
+					<td class="td-value"><%= record.saturday_rate %></td>
+				</tr>
+				<tr>
+					<td class="td-label">Sunday/PH rates:</td>
+					<td class="td-value"><%= record.sunday_publicholiday_rate %></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

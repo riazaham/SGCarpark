@@ -29,6 +29,7 @@ export async function getRecord(searchWord) {
 		getLatLongURL,
 		carparkLatLongQuery
 	);
+	console.log(carparkLatLongData);
 	carparkLatLongData = carparkLatLongData.results[0];
 	const lat = carparkLatLongData.LATITUDE;
 	const lng = carparkLatLongData.LONGITUDE;

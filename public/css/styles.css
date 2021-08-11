@@ -10,6 +10,27 @@
 	width: 20%;
 }
 
-#mapid {
-	height: 200px;
+.table {
+	width: 512px;
+}
+
+.search-panel {
+	width: 1024px;
+}
+
+.search-input {
+	width: 90%;
+	height: 50px;
+	border-bottom: 0;
+	border-radius: 20px 0 0 0;
+}
+
+.search-btn {
+	width: 10%;
+	border-radius: 0 20px 0 0;
+}
+
+.col {
+	padding-left: 0;
+	padding-right: 0;
 }

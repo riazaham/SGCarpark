@@ -1,12 +1,18 @@
 <%- include("partials/header.ejs") -%>
 <h1>SG Carpark</h1>
 <p><%= date %></p>
-<form action="/search" method="post">
-	<input
-		type="text"
-		name="searchWord"
-		placeholder="Search area, building, carpark etc."
-	/>
-	<button type="submit">Search</button>
-</form>
-<%- include("partials/footer.ejs") -%>
+<div class="search-panel mx-auto">
+	<form action="/" method="post">
+		<div class="input-group">
+			<input
+				class="search-input form-control"
+				type="text"
+				name="searchWord"
+				placeholder="Search area, building, carpark etc."
+			/>
+			<button type="submit" class="search-btn btn btn-primary">Search</button>
+		</div>
+	</form>
+</div>
+<%- include("partials/searchResult.ejs") -%> <%- include("partials/footer.ejs")
+-%>

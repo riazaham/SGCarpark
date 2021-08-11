@@ -9,20 +9,19 @@ app.use(express.static("public"));
 
 let searchWord = "";
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
 	const date = getDate();
-	res.render("home.ejs", { date: date });
+	const record = await getRecord(searchWord);
+	res.render("home.ejs", { date: date, record: record });
 });
 
 app.get("/search", async (req, res) => {
-	const record = await getRecord(searchWord);
-
 	res.render("search.ejs", { record: record });
 });
 
-app.post("/search", (req, res) => {
+app.post("/", (req, res) => {
 	searchWord = req.body.searchWord;
-	res.redirect("/search");
+	res.redirect("/");
 });
 
 app.listen(3000, () => console.log("Server started on port 3000."));
