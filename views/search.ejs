@@ -1,4 +1,4 @@
-<%- include("partials/header.ejs") -%> <% for (let record of records) { %>
+<%- include("partials/header.ejs") -%>
 <table class="table table-bordered">
 	<tbody>
 		<tr>
@@ -20,6 +20,14 @@
 			<td class="td-label">Sunday/PH rates:</td>
 			<td class="td-value"><%= record.sunday_publicholiday_rate %></td>
 		</tr>
+		<tr>
+			<td class="td-label">Latitude:</td>
+			<td class="td-value"><%= record.lat %></td>
+		</tr>
+		<tr>
+			<td class="td-label">Longitude:</td>
+			<td class="td-value"><%= record.long %></td>
+		</tr>
 	</tbody>
 </table>
-<% } %> <%- include("partials/footer.ejs") -%>
+<%- include("partials/footer.ejs") -%>
