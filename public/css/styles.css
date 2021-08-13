@@ -42,7 +42,8 @@ body {
 }
 
 .date {
-	background-color: lightgrey;
+	background-color: whitesmoke;
+	border: 1px solid lightgrey;
 	font-size: large;
 	height: 50px;
 	line-height: 50px;

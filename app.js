@@ -12,16 +12,26 @@ let searchWord = "";
 app.get("/", async (req, res) => {
 	const date = getDate();
 	const record = await getRecord(searchWord);
-	res.render("home.ejs", { date: date, record: record });
+	res.render("home.ejs", {
+		date: date,
+		record: record,
+		searchWord: searchWord,
+	});
 });
 
-app.get("/search", async (req, res) => {
-	res.render("search.ejs", { record: record });
+app.get("/search/:searchWord", async (req, res) => {
+	const date = getDate();
+	const record = await getRecord(searchWord);
+	res.render("home.ejs", {
+		date: date,
+		record: record,
+		searchWord: searchWord,
+	});
 });
 
-app.post("/", (req, res) => {
+app.post("/search", (req, res) => {
 	searchWord = req.body.searchWord;
-	res.redirect("/");
+	res.redirect("/search/" + searchWord);
 });
 
 app.listen(3000, () => console.log("Server started on port 3000."));
