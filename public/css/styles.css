@@ -26,12 +26,12 @@ body {
 }
 
 .search-input {
-	width: 70%;
+	width: 60%;
 	height: 50px;
 }
 
 .search-btn {
-	width: 10%;
+	width: 20%;
 }
 
 .map-result,
@@ -53,4 +53,5 @@ body {
 
 .view-on-google-btn {
 	width: 100%;
+	color: white;
 }
