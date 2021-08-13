@@ -1,16 +1,17 @@
 <%- include("partials/header.ejs") -%>
-<h1>SG Carpark</h1>
-<p><%= date %></p>
-<div class="search-panel mx-auto">
+<div class="search-panel mx-auto mb-5">
 	<form action="/" method="post">
 		<div class="input-group">
+			<span class="date"><%= date %></span>
 			<input
-				class="search-input form-control"
+				class="search-input form-control shadow-none"
 				type="text"
 				name="searchWord"
-				placeholder="Search area, building, carpark etc."
+				placeholder="Search major shopping malls, attractions and hotels"
 			/>
-			<button type="submit" class="search-btn btn btn-primary">Search</button>
+			<button type="submit" class="search-btn btn btn-primary shadow-none">
+				Search <i class="bi bi-search ms-1"></i>
+			</button>
 		</div>
 	</form>
 </div>

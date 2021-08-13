@@ -1,13 +1,13 @@
-<div class="row">
-	<div class="col text-end">
+<div class="row justify-content-center">
+	<div class="map-result">
 		<img id="mapid" src="data:image/png;base64, <%= record.staticMap %>" />
 	</div>
-	<div class="col">
+	<div class="rate-result">
 		<table class="table table-bordered">
 			<tbody>
 				<tr>
 					<td class="td-label">Carpark:</td>
-					<td class="td-value"><%= record.carpark %></td>
+					<td class="td-value td-top-right"><%= record.carpark %></td>
 				</tr>
 				<tr>
 					<td class="td-label" rowspan="2">Weekday rates:</td>
@@ -24,7 +24,19 @@
 					<td class="td-label">Sunday/PH rates:</td>
 					<td class="td-value"><%= record.sunday_publicholiday_rate %></td>
 				</tr>
+				<tr>
+					<td class="expanded-td" colspan="2"></td>
+				</tr>
 			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="2">
+						<button class="view-on-google-btn btn btn-primary shadow-none">
+							View on Google Maps <i class="bi bi-box-arrow-up-right ms-1"></i>
+						</button>
+					</td>
+				</tr>
+			</tfoot>
 		</table>
 	</div>
 </div>

@@ -1,36 +1,55 @@
+body {
+	text-align: center;
+}
+
 .table {
 	width: 30%;
 }
 
 .td-label {
 	width: 10%;
+	height: 20px;
 }
 
 .td-value {
 	width: 20%;
+	height: 20px;
 }
 
 .table {
 	width: 512px;
+	height: 512px;
 }
 
 .search-panel {
-	width: 1024px;
+	width: 1024px; /* 512px x 2 */
 }
 
 .search-input {
-	width: 90%;
+	width: 70%;
 	height: 50px;
-	border-bottom: 0;
-	border-radius: 20px 0 0 0;
 }
 
 .search-btn {
 	width: 10%;
-	border-radius: 0 20px 0 0;
 }
 
-.col {
-	padding-left: 0;
-	padding-right: 0;
+.map-result,
+.rate-result {
+	width: 512px;
+	height: 512px;
+	padding: 0;
+}
+
+.date {
+	background-color: lightgrey;
+	font-size: large;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	width: 20%;
+}
+
+.view-on-google-btn {
+	width: 100%;
 }
