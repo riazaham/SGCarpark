@@ -1,19 +1,23 @@
 import express from "express";
 import { getDate } from "./date.js";
-import { getRecord } from "./records.js";
+import { getCarparkNames, getRecord } from "./records.js";
 
 const app = express();
 app.set("view-engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
+let carparkNames = [];
+
 app.get("/", async (req, res) => {
+	if (carparkNames.length == 0) carparkNames = await getCarparkNames();
 	const date = getDate();
 	const record = await getRecord("");
 	res.render("home.ejs", {
 		date: date,
 		record: record,
 		searchWord: "",
+		carparkNames: carparkNames,
 	});
 });
 
@@ -25,6 +29,7 @@ app.get("/search/:searchWord", async (req, res) => {
 		date: date,
 		record: record,
 		searchWord: searchWord,
+		carparkNames: carparkNames,
 	});
 });
 

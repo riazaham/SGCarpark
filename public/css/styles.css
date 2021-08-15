@@ -55,3 +55,8 @@ body {
 	width: 100%;
 	color: white;
 }
+
+input[name="carpark-names"] {
+	width: 60%;
+	height: 200px;
+}

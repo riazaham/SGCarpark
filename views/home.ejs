@@ -8,8 +8,15 @@
 				type="text"
 				name="searchWord"
 				value="<%= searchWord %>"
+				list="carpark-names"
+				autocomplete="off"
 				placeholder="Search major shopping malls, attractions and hotels"
 			/>
+			<datalist id="carpark-names" name="carpark-names">
+				<% carparkNames.forEach((carpark) => { %>
+				<option><%= carpark %></option>
+				<% }) %>
+			</datalist>
 			<button type="submit" class="search-btn btn btn-primary shadow-none">
 				Search <i class="bi bi-search ms-1"></i>
 			</button>

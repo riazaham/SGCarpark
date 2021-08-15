@@ -1,7 +1,7 @@
 import superagent from "superagent";
 
 const getCarparkRateURL =
-	"https://data.gov.sg/api/action/datastore_search?resource_id=85207289-6ae7-4a56-9066-e6090a3684a5&limit=1";
+	"https://data.gov.sg/api/action/datastore_search?resource_id=85207289-6ae7-4a56-9066-e6090a3684a5";
 
 const getLatLongURL =
 	"https://developers.onemap.sg/commonapi/search?returnGeom=Y&getAddrDetails=N&pageNum=1";
@@ -16,8 +16,18 @@ const makeRequest = async (url, queries) => {
 	else return JSON.parse(res.res.text);
 };
 
+export async function getCarparkNames() {
+	const carparkNamesQuery = "&fields=carpark";
+	let carparkNamesData = await makeRequest(
+		getCarparkRateURL,
+		carparkNamesQuery
+	);
+	carparkNamesData = carparkNamesData.result.records;
+	return carparkNamesData.map((data) => data.carpark);
+}
+
 export async function getRecord(searchWord) {
-	const carparkRatesQuery = "&q=" + searchWord;
+	const carparkRatesQuery = "&q=" + searchWord + "&limit=1";
 	let carparkRatesData = await makeRequest(
 		getCarparkRateURL,
 		carparkRatesQuery
