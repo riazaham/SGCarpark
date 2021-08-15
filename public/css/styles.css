@@ -23,6 +23,7 @@ body {
 
 .search-panel {
 	width: 1024px; /* 512px x 2 */
+	position: relative;
 }
 
 .search-input {
@@ -56,7 +57,20 @@ body {
 	color: white;
 }
 
-input[name="carpark-names"] {
+#carpark-names {
+	background-color: white;
+	border: 1px solid lightgrey;
+	border-top: none;
+	height: fit-content;
+	margin: auto;
+	position: absolute;
+	left: 20%;
 	width: 60%;
-	height: 200px;
+	text-align: start;
+}
+
+.carpark-name {
+	padding: 7px 7px;
+	margin: 0;
+	cursor: default;
 }

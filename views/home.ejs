@@ -2,26 +2,44 @@
 <div class="search-panel mx-auto mb-5">
 	<form action="/search" method="post">
 		<div class="input-group">
-			<span class="date"><%= date %></span>
+			<div class="date"><%= date %></div>
 			<input
+				id="search-input"
 				class="search-input form-control shadow-none"
 				type="text"
 				name="searchWord"
 				value="<%= searchWord %>"
-				list="carpark-names"
 				autocomplete="off"
 				placeholder="Search major shopping malls, attractions and hotels"
 			/>
-			<datalist id="carpark-names" name="carpark-names">
-				<% carparkNames.forEach((carpark) => { %>
-				<option><%= carpark %></option>
-				<% }) %>
-			</datalist>
 			<button type="submit" class="search-btn btn btn-primary shadow-none">
 				Search <i class="bi bi-search ms-1"></i>
 			</button>
 		</div>
 	</form>
+	<div id="carpark-names" hidden="true">
+		<p id="0" class="carpark-name" hidden="true"></p>
+		<p id="1" class="carpark-name" hidden="true"></p>
+		<p id="2" class="carpark-name" hidden="true"></p>
+		<p id="3" class="carpark-name" hidden="true"></p>
+		<p id="4" class="carpark-name" hidden="true"></p>
+	</div>
 </div>
+<script>
+	document.getElementById("search-input").addEventListener("input", (e) => {
+		const searchData = [];
+		("<% carparkNames.forEach((carpark) => { %>");
+		if ("<%= carpark %>".toLowerCase().includes(e.target.value.toLowerCase()))
+			searchData.push("<%= carpark %>");
+		("<% }); %>");
+		console.log(searchData.slice(0, 5));
+		[0, 1, 2, 3, 4].forEach((index) => {
+			if (searchData[index] != undefined) {
+				document.getElementById(index.toString()).hidden = false;
+				document.getElementById(index.toString()).innerHTML = searchData[index];
+			} else document.getElementById(index.toString()).hidden = true;
+		});
+	});
+</script>
 <%- include("partials/searchResult.ejs") -%> <%- include("partials/footer.ejs")
 -%>
