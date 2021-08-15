@@ -3,8 +3,9 @@ document.getElementById("search-input").addEventListener("focus", () => {
 });
 
 document.addEventListener("click", (e) => {
-	if (e.target.id !== "search-input")
-		document.getElementById("carpark-names").hidden = true;
+	if (e.target.id === "search-input")
+		document.getElementById("carpark-names").hidden = false;
+	else document.getElementById("carpark-names").hidden = true;
 });
 
 document.getElementById("carpark-names").addEventListener("click", (e) => {

@@ -27,12 +27,12 @@
 </div>
 <script>
 	document.getElementById("search-input").addEventListener("input", (e) => {
+		document.getElementById("carpark-names").hidden = false;
 		const searchData = [];
 		("<% carparkNames.forEach((carpark) => { %>");
 		if ("<%= carpark %>".toLowerCase().includes(e.target.value.toLowerCase()))
 			searchData.push("<%= carpark %>");
 		("<% }); %>");
-		console.log(searchData.slice(0, 5));
 		[0, 1, 2, 3, 4].forEach((index) => {
 			if (searchData[index] != undefined) {
 				document.getElementById(index.toString()).hidden = false;
