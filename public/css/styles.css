@@ -74,3 +74,16 @@ body {
 	margin: 0;
 	cursor: default;
 }
+
+#loading-spinner {
+	display: flex;
+	background-color: white;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	justify-content: center;
+	align-items: center;
+	z-index: 100;
+}

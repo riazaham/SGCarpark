@@ -8,17 +8,28 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 let carparkNames = [];
+let date = "";
+let record = {};
+let loading = true;
 
-app.get("/", async (req, res) => {
+app.get("/", (req, res) => {
+	if (loading) res.render("partials/loading.ejs");
+	else {
+		res.render("home.ejs", {
+			date: date,
+			record: record,
+			searchWord: "",
+			carparkNames: carparkNames,
+		});
+	}
+});
+
+app.get("/api/loading", async (req, res) => {
 	if (carparkNames.length == 0) carparkNames = await getCarparkNames();
-	const date = getDate();
-	const record = await getRecord("");
-	res.render("home.ejs", {
-		date: date,
-		record: record,
-		searchWord: "",
-		carparkNames: carparkNames,
-	});
+	date = getDate();
+	record = await getRecord("");
+	loading = false;
+	res.redirect("/");
 });
 
 app.get("/search/:searchWord", async (req, res) => {

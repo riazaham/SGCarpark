@@ -1,0 +1,48 @@
+<%- include("header.ejs") -%>
+<div class="search-panel-loading shine mx-auto mb-5"></div>
+<div class="row justify-content-center">
+	<div class="map-result-loading shine"></div>
+	<div class="rate-result">
+		<table class="table table-bordered">
+			<tbody>
+				<tr>
+					<td class="td-label"><div class="td-loading shine">-</div></td>
+					<td class="td-value"><div class="td-loading shine">-</div></td>
+				</tr>
+				<tr>
+					<td class="td-label" rowspan="2">
+						<div class="td-loading shine">-</div>
+					</td>
+					<td class="td-value"><div class="td-loading shine">-</div></td>
+				</tr>
+				<tr>
+					<td class="td-value"><div class="td-loading shine">-</div></td>
+				</tr>
+				<tr>
+					<td class="td-label"><div class="td-loading shine">-</div></td>
+					<td class="td-value"><div class="td-loading shine">-</div></td>
+				</tr>
+				<tr>
+					<td class="td-label"><div class="td-loading shine">-</div></td>
+					<td class="td-value"><div class="td-loading shine">-</div></td>
+				</tr>
+				<tr>
+					<td colspan="2"></td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="2"><div class="td-loading shine">-</div></td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+	axios.get("/api/loading").then((res) => {
+		if (res.status === 200) window.location.href = "/";
+		else console.log(res.status);
+	});
+</script>
+<%- include("footer.ejs") -%>
