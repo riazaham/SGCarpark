@@ -1,6 +1,6 @@
 <%- include("partials/header.ejs") -%>
 <div class="search-panel mx-auto mb-5">
-	<form action="/search" method="post">
+	<form id="search-form">
 		<div class="input-group">
 			<div class="date"><%= date %></div>
 			<input
@@ -25,7 +25,84 @@
 		<p id="4" class="carpark-name" hidden="true"></p>
 	</div>
 </div>
+<%- include("partials/searchResult.ejs") -%>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
+	document.getElementById("search-form") /
+		addEventListener("submit", (e) => {
+			document
+				.getElementById("search-google-btn")
+				.classList.remove("btn", "btn-info", "shadow-none");
+			document.getElementById("search-google-btn").innerHTML = "&nbsp";
+			document
+				.getElementById("search-google-btn")
+				.classList.add("td-loading", "shine");
+			document.getElementById("map-result").classList.remove("map-result");
+			document
+				.getElementById("map-result")
+				.classList.add("map-result-loading", "shine");
+			for (let element of document.getElementsByClassName("td-label")) {
+				element.innerHTML = '<div class="td-loading shine"></div>';
+			}
+			for (let element of document.getElementsByClassName("td-value")) {
+				element.innerHTML = '<div class="td-loading shine"></div>';
+			}
+
+			document.getElementById("map-result").classList.remove("map-result");
+			document
+				.getElementById("map-result")
+				.classList.add("map-result-loading", "shine");
+			document.getElementById("map-img").src = "";
+
+			const searchWord = document.getElementById("search-input").value;
+			axios.post("/api/getRates", { searchWord: searchWord }).then(
+				(response) => {
+					const rate = response.data;
+					axios.post("/api/getMap", { carpark: rate.carpark }).then(
+						(response) => {
+							document
+								.getElementById("map-result")
+								.classList.remove("map-result-loading", "shine");
+							document.getElementById("map-result").classList.add("map-result");
+							document.getElementById("map-img").src =
+								"data:image/png;base64," + response.data;
+						},
+						(error) => console.log(error)
+					);
+
+					for (let i = 0; i < 4; i++) {
+						document.getElementsByClassName("td-label")[i].innerHTML = [
+							"Carpark",
+							"Weekday Rates",
+							"Saturday Rates",
+							"Sunday/PH rates",
+						][i];
+					}
+					for (let i = 0; i < 5; i++) {
+						document.getElementsByClassName("td-value")[i].innerHTML = [
+							rate.carpark,
+							rate.weekdays_rate_1,
+							rate.weekdays_rate_2,
+							rate.saturday_rate,
+							rate.sunday_publicholiday_rate,
+						][i];
+					}
+					document
+						.getElementById("search-google-btn")
+						.classList.remove("td-loading", "shine");
+					document
+						.getElementById("search-google-btn")
+						.classList.add("btn", "btn-info", "shadow-none");
+					document.getElementById("search-google-btn").innerHTML =
+						'View on Google Maps <i class="bi bi-box-arrow-up-right ms-1"></i>';
+					document.getElementById("search-google-btn").href =
+						"https://maps.google.com/?q=" + rate.carpark;
+				},
+				(error) => console.log(error)
+			);
+			e.preventDefault();
+		});
+
 	document.getElementById("search-input").addEventListener("input", (e) => {
 		document.getElementById("carpark-names").hidden = false;
 		const searchData = [];
@@ -65,5 +142,4 @@
 		});
 	});
 </script>
-<%- include("partials/searchResult.ejs") -%> <%- include("partials/footer.ejs")
--%>
+<%- include("partials/footer.ejs") -%>

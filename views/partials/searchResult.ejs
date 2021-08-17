@@ -1,8 +1,8 @@
 <div class="row justify-content-center">
-	<div class="map-result">
-		<img id="mapid" src="data:image/png;base64, <%= record.staticMap %>" />
+	<div id="map-result" class="map-result">
+		<img id="map-img" src="data:image/png;base64, <%= map %>" />
 	</div>
-	<div class="rate-result">
+	<div id="rate-result" class="rate-result">
 		<table class="table table-bordered">
 			<tbody>
 				<tr>
@@ -32,7 +32,8 @@
 				<tr>
 					<td colspan="2">
 						<a
-							class="view-on-google-btn btn btn-info shadow-none"
+							id="search-google-btn"
+							class="btn btn-info shadow-none"
 							href="https://maps.google.com/?q=<%= record.carpark %>"
 							target="_blank"
 						>

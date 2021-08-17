@@ -44,6 +44,49 @@ export async function getCarparkNames() {
 	return carparkNamesData.map((data) => data.carpark);
 }
 
+export async function getRates(searchWord) {
+	const carparkRatesQuery = "&q=" + parseSearchWord(searchWord) + "&limit=1";
+	let carparkRatesData = await makeRequest(
+		getCarparkRateURL,
+		carparkRatesQuery
+	);
+	carparkRatesData = carparkRatesData.result.records[0];
+
+	return {
+		carpark: carparkRatesData.carpark,
+		weekdays_rate_1: carparkRatesData.weekdays_rate_1,
+		weekdays_rate_2: carparkRatesData.weekdays_rate_2,
+		saturday_rate: carparkRatesData.saturday_rate,
+		sunday_publicholiday_rate: carparkRatesData.sunday_publicholiday_rate,
+	};
+}
+
+export async function getMap(carpark) {
+	const carparkLatLongQuery = "&searchVal=" + carpark;
+	let carparkLatLongData = await makeRequest(
+		getLatLongURL,
+		carparkLatLongQuery
+	);
+
+	carparkLatLongData = carparkLatLongData.results[0];
+	const lat = carparkLatLongData.LATITUDE;
+	const lng = carparkLatLongData.LONGITUDE;
+
+	const carparkStaticMapQuery =
+		"&lat=" +
+		lat +
+		"&lng=" +
+		lng +
+		"&points=[" +
+		lat +
+		"," +
+		lng +
+		',"255,0,0",' +
+		'""]';
+
+	return await makeRequest(getStaticMapURL, carparkStaticMapQuery);
+}
+
 export async function getRecord(searchWord) {
 	const carparkRatesQuery = "&q=" + parseSearchWord(searchWord) + "&limit=1";
 	let carparkRatesData = await makeRequest(
