@@ -17,102 +17,114 @@
 			</button>
 		</div>
 	</form>
-	<div id="carpark-names" hidden="true">
-		<p id="0" class="suggestion" hidden="true"></p>
-		<p id="1" class="suggestion" hidden="true"></p>
-		<p id="2" class="suggestion" hidden="true"></p>
-		<p id="3" class="suggestion" hidden="true"></p>
-		<p id="4" class="suggestion" hidden="true"></p>
+	<div id="carpark-names">
+		<p id="0" class="suggestion"></p>
+		<p id="1" class="suggestion"></p>
+		<p id="2" class="suggestion"></p>
+		<p id="3" class="suggestion"></p>
+		<p id="4" class="suggestion"></p>
 	</div>
 </div>
 <%- include("partials/searchResult.ejs") -%>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
-	$("#search-form").on("submit", (e) => {
-		$("#search-google-btn")
-			.removeClass("btn btn-info shadow-none")
-			.addClass("td-loading shine");
-		$("#search-google-btn").html("&nbsp");
-		$("#map-result")
-			.removeClass("map-result")
-			.addClass("map-result-loading shine");
+	//Initial state
+	$("#carpark-names").hide();
+	$("#suggestion").hide();
 
-		$(".td-value").html('<div class="td-loading shine"></div>');
-		$("#map-img").attr("src", "");
+	$(document).ready(() => {
+		//Form submit listener
+		$("#search-form").on("submit", (e) => {
+			//Loading shimmer effect
+			$("#search-google-btn")
+				.removeClass("btn btn-info shadow-none")
+				.addClass("td-loading shine");
+			$("#search-google-btn").html("&nbsp");
+			$("#map-result")
+				.removeClass("map-result")
+				.addClass("map-result-loading shine");
 
-		const searchWord = $("#search-input").val();
-		axios.post("/api/getRates", { searchWord: searchWord }).then(
-			(response) => {
-				const rate = response.data;
-				axios.post("/api/getMap", { carpark: rate.carpark }).then(
-					(response) => {
-						$("#map-result")
-							.removeClass("map-result-loading shine")
-							.addClass("map-result");
-						$("#map-img").attr("src", response.data);
-					},
-					(error) => console.log(error)
-				);
+			$(".td-value").html('<div class="td-loading shine"></div>');
+			$("#map-img").attr("src", "");
 
-				$(".td-value").each((i, element) => {
-					element.innerHTML = [
-						rate.carpark,
-						rate.weekdays_rate_1,
-						rate.weekdays_rate_2,
-						rate.saturday_rate,
-						rate.sunday_publicholiday_rate,
-					][i];
-				});
+			//Fetch 2 APIs (chained) - rate and map
+			const searchWord = $("#search-input").val();
+			axios.post("/api/getRates", { searchWord: searchWord }).then(
+				(response) => {
+					const rate = response.data;
+					axios.post("/api/getMap", { carpark: rate.carpark }).then(
+						(response) => {
+							$("#map-result")
+								.removeClass("map-result-loading shine")
+								.addClass("map-result");
+							$("#map-img").attr("src", response.data);
+						},
+						(error) => console.log(error)
+					);
 
-				$("#search-google-btn")
-					.removeClass("td-loading shine")
-					.addClass("btn btn-info shadow-none");
-				$("#search-google-btn").html(
-					'View on Google Maps <i class="bi bi-box-arrow-up-right ms-1"></i>'
-				);
-				$("#search-google-btn").attr(
-					"href",
-					"https://maps.google.com/?q=" + rate.carpark
-				);
-			},
-			(error) => console.log(error)
-		);
-		e.preventDefault();
-	});
-
-	$("#search-input").on("input", (e) => {
-		document.getElementById("carpark-names").hidden = false;
-		const searchData = [];
-		("<% carparkNames.forEach((carpark) => { %>");
-		if ("<%= carpark %>".toLowerCase().includes(e.target.value.toLowerCase()))
-			searchData.push("<%= carpark %>");
-		("<% }); %>");
-		$(".suggestion").each((i, element) => {
-			if (searchData[i] !== undefined) {
-				$(element).html(searchData[i]);
-				element.hidden = false;
-			} else element.hidden = true;
+					//Remove loading shimmer and restore content design
+					$(".td-value").each((i, element) => {
+						element.innerHTML = [
+							rate.carpark,
+							rate.weekdays_rate_1,
+							rate.weekdays_rate_2,
+							rate.saturday_rate,
+							rate.sunday_publicholiday_rate,
+						][i];
+					});
+					$("#search-google-btn")
+						.removeClass("td-loading shine")
+						.addClass("btn btn-info shadow-none");
+					$("#search-google-btn").html(
+						'View on Google Maps <i class="bi bi-box-arrow-up-right ms-1"></i>'
+					);
+					$("#search-google-btn").attr(
+						"href",
+						"https://maps.google.com/?q=" + rate.carpark
+					);
+				},
+				(error) => console.log(error)
+			);
+			e.preventDefault();
 		});
-	});
 
-	$("body").on("click", (e) => {
-		if (e.target.id === "search-input")
-			document.getElementById("carpark-names").hidden = false;
-		else document.getElementById("carpark-names").hidden = true;
-	});
+		$("#search-input").on("input focus click", async (e) => {
+			$("#carpark-names").show();
+			//const searchData = [];
+			// ("<% carparkNames.forEach((carpark) => { %>");
+			// if ("<%= carpark %>".toLowerCase().includes(e.target.value.toLowerCase()))
+			// 	searchData.push("<%= carpark %>");
+			// ("<% }); %>");
+			let searchData = await axios.get("/api/getNames");
+			searchData = searchData.data.carparkNames;
+			searchData = searchData.filter((name) =>
+				name.toLowerCase().includes(e.target.value.toLowerCase())
+			);
+			$(".suggestion").each((i, element) => {
+				if (searchData[i] !== undefined) {
+					$(element).html(searchData[i]);
+					$(element).show();
+				} else $(element).hide();
+			});
+		});
 
-	$("#carpark-names").on("click", (e) => {
-		$("#search-input").val($("#" + e.target.id).html());
-	});
+		$("body").on("click", (e) => {
+			if (e.target.id !== "search-input") $("#carpark-names").hide();
+		});
 
-	$(".suggestion").each((i, element) => {
-		$(element).on("mouseover", () =>
-			$(element).css("background-color", "whitesmoke")
-		);
-		$(element).on("mouseout", () =>
-			$(element).css("background-color", "white")
-		);
+		$("#carpark-names").on("click", (e) => {
+			$("#search-input").val($("#" + e.target.id).html());
+		});
+
+		$(".suggestion").each((i, element) => {
+			$(element).on("mouseover", () =>
+				$(element).css("background-color", "whitesmoke")
+			);
+			$(element).on("mouseout", () =>
+				$(element).css("background-color", "white")
+			);
+		});
 	});
 </script>
 <%- include("partials/footer.ejs") -%>

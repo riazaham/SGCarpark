@@ -37,6 +37,10 @@ app.get("/api/loading", async (req, res) => {
 	res.redirect("/");
 });
 
+app.get("/api/getNames", async (req, res) => {
+	res.send({ carparkNames: carparkNames });
+});
+
 app.post("/api/getRates", async (req, res) => {
 	const searchWord = req.body.searchWord;
 	await getRates(searchWord).then(

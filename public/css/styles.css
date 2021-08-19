@@ -70,9 +70,9 @@ body {
 }
 
 .suggestion {
+	cursor: default;
 	padding: 7px 7px;
 	margin: 0;
-	cursor: default;
 }
 
 #loading-spinner {
