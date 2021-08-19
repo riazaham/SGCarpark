@@ -32,18 +32,37 @@ app.get("/api/loading", async (req, res) => {
 	date = getDate();
 	record = await getRates("");
 	map = await getMap(record.carpark);
+	map = "data:image/png;base64," + map;
 	loading = false;
 	res.redirect("/");
 });
 
 app.post("/api/getRates", async (req, res) => {
 	const searchWord = req.body.searchWord;
-	res.send(await getRates(searchWord));
+	await getRates(searchWord).then(
+		(response) => res.send(response),
+		(error) => {
+			console.log(error);
+			res.send({
+				carpark: "Carpark Not Found",
+				weekdays_rate_1: "-",
+				weekdays_rate_2: "-",
+				saturday_rate: "-",
+				sunday_publicholiday_rate: "-",
+			});
+		}
+	);
 });
 
 app.post("/api/getMap", async (req, res) => {
 	const carpark = req.body.carpark;
-	res.send(await getMap(carpark));
+	await getMap(carpark).then(
+		(response) => res.send("data:image/png;base64," + response),
+		(error) => {
+			console.log(error);
+			res.send("/images/mapError.png");
+		}
+	);
 });
 
 app.get("/search/:searchWord", async (req, res) => {

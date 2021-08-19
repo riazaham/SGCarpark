@@ -64,8 +64,7 @@
 								.getElementById("map-result")
 								.classList.remove("map-result-loading", "shine");
 							document.getElementById("map-result").classList.add("map-result");
-							document.getElementById("map-img").src =
-								"data:image/png;base64," + response.data;
+							document.getElementById("map-img").src = response.data;
 						},
 						(error) => console.log(error)
 					);
