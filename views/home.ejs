@@ -90,17 +90,11 @@
 		});
 
 		$("#search-input").on("input focus click", async (e) => {
-			$("#carpark-names").show();
-			//const searchData = [];
-			// ("<% carparkNames.forEach((carpark) => { %>");
-			// if ("<%= carpark %>".toLowerCase().includes(e.target.value.toLowerCase()))
-			// 	searchData.push("<%= carpark %>");
-			// ("<% }); %>");
 			let searchData = await axios.get("/api/getNames");
-			searchData = searchData.data.carparkNames;
-			searchData = searchData.filter((name) =>
+			searchData = searchData.data.carparkNames.filter((name) =>
 				name.toLowerCase().includes(e.target.value.toLowerCase())
 			);
+			$("#carpark-names").show();
 			$(".suggestion").each((i, element) => {
 				if (searchData[i] !== undefined) {
 					$(element).html(searchData[i]);
