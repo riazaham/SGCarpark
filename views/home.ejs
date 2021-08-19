@@ -18,127 +18,101 @@
 		</div>
 	</form>
 	<div id="carpark-names" hidden="true">
-		<p id="0" class="carpark-name" hidden="true"></p>
-		<p id="1" class="carpark-name" hidden="true"></p>
-		<p id="2" class="carpark-name" hidden="true"></p>
-		<p id="3" class="carpark-name" hidden="true"></p>
-		<p id="4" class="carpark-name" hidden="true"></p>
+		<p id="0" class="suggestion" hidden="true"></p>
+		<p id="1" class="suggestion" hidden="true"></p>
+		<p id="2" class="suggestion" hidden="true"></p>
+		<p id="3" class="suggestion" hidden="true"></p>
+		<p id="4" class="suggestion" hidden="true"></p>
 	</div>
 </div>
 <%- include("partials/searchResult.ejs") -%>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
-	document.getElementById("search-form") /
-		addEventListener("submit", (e) => {
-			document
-				.getElementById("search-google-btn")
-				.classList.remove("btn", "btn-info", "shadow-none");
-			document.getElementById("search-google-btn").innerHTML = "&nbsp";
-			document
-				.getElementById("search-google-btn")
-				.classList.add("td-loading", "shine");
-			document.getElementById("map-result").classList.remove("map-result");
-			document
-				.getElementById("map-result")
-				.classList.add("map-result-loading", "shine");
-			for (let element of document.getElementsByClassName("td-label")) {
-				element.innerHTML = '<div class="td-loading shine"></div>';
-			}
-			for (let element of document.getElementsByClassName("td-value")) {
-				element.innerHTML = '<div class="td-loading shine"></div>';
-			}
+	$("#search-form").on("submit", (e) => {
+		$("#search-google-btn")
+			.removeClass("btn btn-info shadow-none")
+			.addClass("td-loading shine");
+		$("#search-google-btn").html("&nbsp");
+		$("#map-result")
+			.removeClass("map-result")
+			.addClass("map-result-loading shine");
 
-			document.getElementById("map-result").classList.remove("map-result");
-			document
-				.getElementById("map-result")
-				.classList.add("map-result-loading", "shine");
-			document.getElementById("map-img").src = "";
+		$(".td-value").html('<div class="td-loading shine"></div>');
+		$("#map-img").attr("src", "");
 
-			const searchWord = document.getElementById("search-input").value;
-			axios.post("/api/getRates", { searchWord: searchWord }).then(
-				(response) => {
-					const rate = response.data;
-					axios.post("/api/getMap", { carpark: rate.carpark }).then(
-						(response) => {
-							document
-								.getElementById("map-result")
-								.classList.remove("map-result-loading", "shine");
-							document.getElementById("map-result").classList.add("map-result");
-							document.getElementById("map-img").src = response.data;
-						},
-						(error) => console.log(error)
-					);
+		const searchWord = $("#search-input").val();
+		axios.post("/api/getRates", { searchWord: searchWord }).then(
+			(response) => {
+				const rate = response.data;
+				axios.post("/api/getMap", { carpark: rate.carpark }).then(
+					(response) => {
+						$("#map-result")
+							.removeClass("map-result-loading shine")
+							.addClass("map-result");
+						$("#map-img").attr("src", response.data);
+					},
+					(error) => console.log(error)
+				);
 
-					for (let i = 0; i < 4; i++) {
-						document.getElementsByClassName("td-label")[i].innerHTML = [
-							"Carpark",
-							"Weekday Rates",
-							"Saturday Rates",
-							"Sunday/PH rates",
-						][i];
-					}
-					for (let i = 0; i < 5; i++) {
-						document.getElementsByClassName("td-value")[i].innerHTML = [
-							rate.carpark,
-							rate.weekdays_rate_1,
-							rate.weekdays_rate_2,
-							rate.saturday_rate,
-							rate.sunday_publicholiday_rate,
-						][i];
-					}
-					document
-						.getElementById("search-google-btn")
-						.classList.remove("td-loading", "shine");
-					document
-						.getElementById("search-google-btn")
-						.classList.add("btn", "btn-info", "shadow-none");
-					document.getElementById("search-google-btn").innerHTML =
-						'View on Google Maps <i class="bi bi-box-arrow-up-right ms-1"></i>';
-					document.getElementById("search-google-btn").href =
-						"https://maps.google.com/?q=" + rate.carpark;
-				},
-				(error) => console.log(error)
-			);
-			e.preventDefault();
-		});
+				$(".td-value").each((i, element) => {
+					element.innerHTML = [
+						rate.carpark,
+						rate.weekdays_rate_1,
+						rate.weekdays_rate_2,
+						rate.saturday_rate,
+						rate.sunday_publicholiday_rate,
+					][i];
+				});
 
-	document.getElementById("search-input").addEventListener("input", (e) => {
+				$("#search-google-btn")
+					.removeClass("td-loading shine")
+					.addClass("btn btn-info shadow-none");
+				$("#search-google-btn").html(
+					'View on Google Maps <i class="bi bi-box-arrow-up-right ms-1"></i>'
+				);
+				$("#search-google-btn").attr(
+					"href",
+					"https://maps.google.com/?q=" + rate.carpark
+				);
+			},
+			(error) => console.log(error)
+		);
+		e.preventDefault();
+	});
+
+	$("#search-input").on("input", (e) => {
 		document.getElementById("carpark-names").hidden = false;
 		const searchData = [];
 		("<% carparkNames.forEach((carpark) => { %>");
 		if ("<%= carpark %>".toLowerCase().includes(e.target.value.toLowerCase()))
 			searchData.push("<%= carpark %>");
 		("<% }); %>");
-		[0, 1, 2, 3, 4].forEach((index) => {
-			if (searchData[index] != undefined) {
-				document.getElementById(index.toString()).hidden = false;
-				document.getElementById(index.toString()).innerHTML = searchData[index];
-			} else document.getElementById(index.toString()).hidden = true;
+		$(".suggestion").each((i, element) => {
+			if (searchData[i] !== undefined) {
+				$(element).html(searchData[i]);
+				element.hidden = false;
+			} else element.hidden = true;
 		});
 	});
 
-	document.getElementById("search-input").addEventListener("focus", () => {
-		document.getElementById("carpark-names").hidden = false;
-	});
-
-	document.addEventListener("click", (e) => {
+	$("body").on("click", (e) => {
 		if (e.target.id === "search-input")
 			document.getElementById("carpark-names").hidden = false;
 		else document.getElementById("carpark-names").hidden = true;
 	});
 
-	document.getElementById("carpark-names").addEventListener("click", (e) => {
-		const searchWord = document.getElementById(e.target.id).innerHTML;
-		document.getElementById("search-input").value = searchWord;
+	$("#carpark-names").on("click", (e) => {
+		$("#search-input").val($("#" + e.target.id).html());
 	});
 
-	["0", "1", "2", "3", "4"].forEach((index) => {
-		document.getElementById(index).addEventListener("mouseover", () => {
-			document.getElementById(index).style.backgroundColor = "whitesmoke";
-		});
-		document.getElementById(index).addEventListener("mouseout", () => {
-			document.getElementById(index).style.backgroundColor = "white";
-		});
+	$(".suggestion").each((i, element) => {
+		$(element).on("mouseover", () =>
+			$(element).css("background-color", "whitesmoke")
+		);
+		$(element).on("mouseout", () =>
+			$(element).css("background-color", "white")
+		);
 	});
 </script>
 <%- include("partials/footer.ejs") -%>
