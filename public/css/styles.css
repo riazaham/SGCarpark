@@ -74,3 +74,17 @@ body {
 	padding: 7px 7px;
 	margin: 0;
 }
+
+@media only screen and (max-width: 1024px) {
+	.search-panel {
+		width: 512px;
+		position: relative;
+	}
+
+	.date {
+		font-size: medium;
+		padding: 0 10px;
+		display: inline-block;
+		line-height: 23px;
+	}
+}
