@@ -1,6 +1,6 @@
 import express from "express";
 import { getDate } from "./date.js";
-import { getCarparkNames, getMap, getRates, getRecord } from "./records.js";
+import { getNames, getMap, getRates } from "./records.js";
 
 const app = express();
 app.set("view-engine", "ejs");
@@ -15,7 +15,7 @@ let loading = true;
 let map = "";
 
 app.get("/", (req, res) => {
-	if (loading) res.render("partials/loading.ejs");
+	if (loading) res.render("loading.ejs");
 	else {
 		res.render("home.ejs", {
 			date: date,
@@ -28,7 +28,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/loading", async (req, res) => {
-	if (carparkNames.length == 0) carparkNames = await getCarparkNames();
+	if (carparkNames.length == 0) carparkNames = await getNames();
 	date = getDate();
 	record = await getRates("");
 	map = await getMap(record.carpark);
@@ -67,23 +67,6 @@ app.post("/api/getMap", async (req, res) => {
 			res.send("/images/mapError.png");
 		}
 	);
-});
-
-app.get("/search/:searchWord", async (req, res) => {
-	const date = getDate();
-	const searchWord = req.params.searchWord;
-	const record = await getRecord(searchWord);
-	res.render("home.ejs", {
-		date: date,
-		record: record,
-		searchWord: searchWord,
-		carparkNames: carparkNames,
-		map: map,
-	});
-});
-
-app.post("/search", (req, res) => {
-	res.redirect("/search/" + req.body.searchWord);
 });
 
 app.listen(3000, () => console.log("Server started on port 3000."));
