@@ -14,6 +14,7 @@ body {
 .td-value {
 	width: 20%;
 	height: 20px;
+	text-align: left;
 }
 
 .table {
