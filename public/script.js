@@ -7,7 +7,7 @@ $(document).ready(() => {
 	$("#search-form").on("submit", (e) => {
 		//Loading shimmer effect
 		$("#search-google-btn")
-			.removeClass("btn btn-info shadow-none")
+			.removeClass("btn btn-info btn-secondary shadow-none disabled")
 			.addClass("td-loading shine");
 		$("#search-google-btn").html("&nbsp");
 		$("#map-result")
@@ -32,7 +32,7 @@ $(document).ready(() => {
 					(error) => console.log(error)
 				);
 
-				//Remove loading shimmer and restore content design
+				//Remove loading shimmer and restore content
 				$(".td-value").each((i, element) => {
 					element.innerHTML = [
 						rate.carpark,
@@ -42,16 +42,26 @@ $(document).ready(() => {
 						rate.sunday_publicholiday_rate,
 					][i];
 				});
-				$("#search-google-btn")
-					.removeClass("td-loading shine")
-					.addClass("btn btn-info shadow-none");
 				$("#search-google-btn").html(
 					'View on Google Maps <i class="bi bi-box-arrow-up-right ms-1"></i>'
 				);
-				$("#search-google-btn").attr(
-					"href",
-					"https://maps.google.com/?q=" + rate.carpark
-				);
+
+				//UI states for error and success
+				if (rate.carpark === "Carpark Not Found") {
+					$(".td-value").css("color", "red");
+					$("#search-google-btn")
+						.removeClass("td-loading shine")
+						.addClass("btn btn-secondary disabled");
+				} else {
+					$(".td-value").css("color", "black");
+					$("#search-google-btn")
+						.removeClass("td-loading shine")
+						.addClass("btn btn-info shadow-none");
+					$("#search-google-btn").attr(
+						"href",
+						"https://maps.google.com/?q=" + rate.carpark
+					);
+				}
 			},
 			(error) => console.log(error)
 		);
