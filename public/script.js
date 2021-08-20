@@ -22,15 +22,36 @@ $(document).ready(() => {
 		axios.post("/api/getRates", { searchWord: searchWord }).then(
 			(response) => {
 				const rate = response.data;
-				axios.post("/api/getMap", { carpark: rate.carpark }).then(
-					(response) => {
-						$("#map-result")
-							.removeClass("map-result-loading shine")
-							.addClass("map-result");
-						$("#map-img").attr("src", response.data);
-					},
-					(error) => console.log(error)
-				);
+
+				//UI states for error and success
+				if (rate.carpark === "Carpark Not Found") {
+					$(".td-value").css("color", "red");
+					$("#search-google-btn")
+						.removeClass("td-loading shine")
+						.addClass("btn btn-secondary disabled");
+					$("#map-result")
+						.removeClass("map-result-loading shine")
+						.addClass("map-result");
+					$("#map-img").attr("src", "/images/mapError.png");
+				} else {
+					axios.post("/api/getMap", { carpark: rate.carpark }).then(
+						(response) => {
+							$("#map-result")
+								.removeClass("map-result-loading shine")
+								.addClass("map-result");
+							$("#map-img").attr("src", response.data);
+						},
+						(error) => console.log(error)
+					);
+					$(".td-value").css("color", "black");
+					$("#search-google-btn")
+						.removeClass("td-loading shine")
+						.addClass("btn btn-info shadow-none");
+					$("#search-google-btn").attr(
+						"href",
+						"https://maps.google.com/?q=" + rate.carpark
+					);
+				}
 
 				//Remove loading shimmer and restore content
 				$(".td-value").each((i, element) => {
@@ -45,23 +66,6 @@ $(document).ready(() => {
 				$("#search-google-btn").html(
 					'View on Google Maps <i class="bi bi-box-arrow-up-right ms-1"></i>'
 				);
-
-				//UI states for error and success
-				if (rate.carpark === "Carpark Not Found") {
-					$(".td-value").css("color", "red");
-					$("#search-google-btn")
-						.removeClass("td-loading shine")
-						.addClass("btn btn-secondary disabled");
-				} else {
-					$(".td-value").css("color", "black");
-					$("#search-google-btn")
-						.removeClass("td-loading shine")
-						.addClass("btn btn-info shadow-none");
-					$("#search-google-btn").attr(
-						"href",
-						"https://maps.google.com/?q=" + rate.carpark
-					);
-				}
 			},
 			(error) => console.log(error)
 		);
